@@ -1,0 +1,5 @@
+[2024-12-10 15:14:16,556] 290 langchain_community.chat_models.openai - WARNING - WARNING! verify is not default parameter.
+                    verify was transferred to model_kwargs.
+                    Please confirm that verify is what you intended.
+[2024-12-10 15:14:33,439] 1089 openai._base_client - INFO - Retrying request to /chat/completions in 0.418682 seconds
+[2024-12-10 15:14:33,891] 1089 openai._base_client - INFO - Retrying request to /chat/completions in 0.779110 seconds

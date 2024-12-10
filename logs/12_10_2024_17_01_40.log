@@ -1,0 +1,3 @@
+[2024-12-10 17:01:42,316] 290 langchain_community.chat_models.openai - WARNING - WARNING! verify is not default parameter.
+                    verify was transferred to model_kwargs.
+                    Please confirm that verify is what you intended.

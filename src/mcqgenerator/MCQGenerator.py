@@ -1,4 +1,5 @@
 import os
+import openai
 import json
 import traceback
 import pandas as pd
@@ -7,7 +8,10 @@ from src.mcqgenerator.utils import read_file,get_table_data
 from src.mcqgenerator.logger import logging
 
 #imporing necessary packages packages from langchain
-from langchain.chat_models import ChatOpenAI
+#from langchain.chat_models import ChatOpenAI
+#from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
+
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
@@ -18,6 +22,27 @@ load_dotenv()
 
 # Access the environment variables just like you would with os.environ
 key=os.getenv("OPENAI_API_KEY")
+
+os.environ["SSL_CERT_FILE"] = ""
+
+# Alternatively, disable verification when making HTTP requests:
+llm = ChatOpenAI(
+    openai_api_key=key,
+    model_name="gpt-3.5-turbo",
+    temperature=0.7,
+    verify=False  # Not recommended for production
+)
+
+
+
+openai.api_base = "https://api.openai.com"
+openai.api_key =key
+
+import httpx
+
+client = httpx.Client(verify=False)
+# Then use the client to make requests
+
 
 
 llm = ChatOpenAI(openai_api_key=key,model_name="gpt-3.5-turbo", temperature=0.7)
@@ -38,7 +63,13 @@ quiz_generation_prompt = PromptTemplate(
     input_variables=["text", "number", "subject", "tone", "response_json"],
     template=template)
 
-quiz_chain=LLMChain(llm=llm,prompts=quiz_generation_prompt,output_key="quiz",verbose=True)
+#quiz_chain=LLMChain(llm=llm,prompt=quiz_generation_prompt,output_key="quiz",verbose=True)
+
+quiz_chain = (quiz_generation_prompt | llm).with_config({
+    "output_key": "quiz",
+    "verbose": True
+})
+
 
 
 template2="""
